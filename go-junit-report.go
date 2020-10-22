@@ -34,7 +34,7 @@ func main() {
 	case "text":
 		testParser = &parser.TextParser{}
 	case "json":
-		panic("not implemented")
+		testParser = &parser.JsonParser{}
 	default:
 		log.Fatalf("parser '%s' is not valid", *parserType)
 		return
