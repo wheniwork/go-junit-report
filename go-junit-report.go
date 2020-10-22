@@ -3,13 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
-	"github.com/jstemmer/go-junit-report/formatter"
-	"github.com/jstemmer/go-junit-report/parser"
+	"github.com/wheniwork/go-junit-report/formatter"
+	"github.com/wheniwork/go-junit-report/parser"
 )
 
 var (
+	parserType    = flag.String("parser", "text", "parser to use for the output of go test")
 	noXMLHeader   = flag.Bool("no-xml-header", false, "do not print xml header")
 	packageName   = flag.String("package-name", "", "specify a package name (compiled test have no package name in output)")
 	goVersionFlag = flag.String("go-version", "", "specify the value to use for the go.version property in the generated XML")
@@ -25,8 +28,20 @@ func main() {
 		os.Exit(1)
 	}
 
+	var testParser parser.Parser
+
+	switch strings.ToLower(*parserType) {
+	case "text":
+		testParser = &parser.TextParser{}
+	case "json":
+		panic("not implemented")
+	default:
+		log.Fatalf("parser '%s' is not valid", *parserType)
+		return
+	}
+
 	// Read input
-	report, err := parser.Parse(os.Stdin, *packageName)
+	report, err := testParser.Parse(os.Stdin, *packageName)
 	if err != nil {
 		fmt.Printf("Error reading input: %s\n", err)
 		os.Exit(1)
