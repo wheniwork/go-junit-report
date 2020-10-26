@@ -18,7 +18,7 @@ func TestParseSeconds(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		d := parseSeconds(test.in)
+		d := (&TextParser{}).parseSeconds(test.in)
 		if d != test.d {
 			t.Errorf("parseSeconds(%q) == %v, want %v\n", test.in, d, test.d)
 		}
@@ -39,7 +39,7 @@ func TestParseNanoseconds(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		d := parseNanoseconds(test.in)
+		d := (&TextParser{}).parseNanoseconds(test.in)
 		if d != test.d {
 			t.Errorf("parseSeconds(%q) == %v, want %v\n", test.in, d, test.d)
 		}

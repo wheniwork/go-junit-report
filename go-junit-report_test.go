@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jstemmer/go-junit-report/formatter"
-	"github.com/jstemmer/go-junit-report/parser"
+	"github.com/wheniwork/go-junit-report/formatter"
+	"github.com/wheniwork/go-junit-report/parser"
 )
 
 var matchTest = flag.String("match", "", "only test testdata matching this pattern")
@@ -1550,7 +1550,9 @@ func TestParser(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		report, err := parser.Parse(file, testCase.packageName)
+		textParser := parser.TextParser{}
+
+		report, err := textParser.Parse(file, testCase.packageName)
 		if err != nil {
 			t.Fatalf("error parsing: %s", err)
 		}
