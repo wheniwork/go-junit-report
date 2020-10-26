@@ -16,15 +16,15 @@ type JsonParser struct{}
 func (j *JsonParser) Parse(r io.Reader, pkgName string) (*Report, error) {
 	reader := bufio.NewReader(r)
 
-	tests := map[string]map[string]Test{}
+	tests := map[string]map[string]*Test{}
 
 	type TestEvent struct {
-		Time    time.Time `json:"time"` // encodes as an RFC3339-format string
-		Action  string    `json:"action"`
-		Package string    `json:"package"`
-		Test    string    `json:"test"`
-		Elapsed float64   `json:"elapsed"` // seconds
-		Output  string    `json:"output"`
+		Time    time.Time // encodes as an RFC3339-format string
+		Action  string
+		Package string
+		Test    string
+		Elapsed float64 // seconds
+		Output  string
 	}
 
 	for {
@@ -44,13 +44,13 @@ func (j *JsonParser) Parse(r io.Reader, pkgName string) (*Report, error) {
 		default:
 			pkg, ok := tests[item.Package]
 			if !ok {
-				pkg = map[string]Test{}
+				pkg = map[string]*Test{}
 				tests[item.Package] = pkg
 			}
 
 			test, ok := pkg[item.Test]
 			if !ok {
-				test = Test{
+				test = &Test{
 					Name:   item.Test,
 					Output: make([]string, 0),
 				}
@@ -82,13 +82,12 @@ func (j *JsonParser) Parse(r io.Reader, pkgName string) (*Report, error) {
 	for pkg, packageTests := range tests {
 		testList := make([]*Test, 0, len(packageTests))
 		for _, test := range packageTests {
-			testList = append(testList, &test)
+			testList = append(testList, test)
 		}
 
-
 		report.Packages = append(report.Packages, Package{
-			Name:        pkg,
-			Tests:       testList,
+			Name:  pkg,
+			Tests: testList,
 		})
 	}
 
