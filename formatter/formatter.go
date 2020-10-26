@@ -113,7 +113,7 @@ func JUnitReportXML(report *parser.Report, noXMLHeader bool, goVersion string, w
 				testCase.SkipMessage = &JUnitSkipMessage{strings.Join(test.Output, "\n")}
 			}
 
-			testCase.Output = strings.Join(test.Output, "\n")
+			testCase.Output = strings.Join(test.Output, "")
 
 			ts.TestCases = append(ts.TestCases, testCase)
 		}
